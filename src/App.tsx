@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { IUser } from './models';
+import { Users } from './components/Users';
 
 function App() {
+  const [users, setUsers] = useState<IUser[]>([])
+  async function fetchUsers() {
+    const response = await axios.get<IUser[]>('http://localhost:5000/users', { withCredentials: true })
+    setUsers(response.data)
+  }
+  useEffect(() => {
+    fetchUsers()
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container mx-auto max-w-2xl pt-5'>
+      <h1 className='text-7xl'>
+        Hello world!
+      </h1>
+      { users.map(users => <Users users={users} key={users.id} />) }
     </div>
-  );
+  )
 }
 
 export default App;
